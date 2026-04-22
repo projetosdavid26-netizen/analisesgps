@@ -768,9 +768,14 @@ def analisar():
 
 
 if __name__ == '__main__':
+    import os
+    port = int(os.environ.get('PORT', 5000))
+    
     print("=" * 55)
     print("  📍 GPS Analytics - Percas de Partida x Reset")
     print("  ✅ Extrai código do veículo da descrição (ex: 20075, 20030)")
-    print("  🌐 Acesse: http://localhost:5000")
+    print(f"  🌐 Servidor rodando em http://0.0.0.0:{port}")
     print("=" * 55)
-    app.run(debug=False, port=5000)
+    
+    # Importante: host='0.0.0.0' para Railway
+    app.run(host='0.0.0.0', port=port, debug=False)
