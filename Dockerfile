@@ -1,17 +1,25 @@
 FROM python:3.11-slim
 
+# Define diretório de trabalho
 WORKDIR /app
 
-# Copia e instala dependências
+# Atualiza o pip e instala dependências do sistema
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copia apenas o requirements.txt primeiro (melhor para cache)
 COPY requirements.txt .
+
+# Instala as dependências Python
+RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia o código
+# Copia o resto do código
 COPY analise_gps.py .
 
-# Railway define a porta automaticamente
-ENV PORT=8080
+# Expõe a porta (Railway vai sobrescrever)
 EXPOSE 8080
 
-# Executa a aplicação
-CMD ["python", "analise_gps.py"]
+# Comando para rodar a aplicação
+CMD ["python", "-u", "analise_gps.py"]
